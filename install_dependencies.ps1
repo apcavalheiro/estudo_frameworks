@@ -59,9 +59,9 @@ if (-not (CommandExists "pulumi")) {
 }
 
 # Verificação do diretório de instalação do Pulumi
-$pulumiExe = "C:\Pulumi\pulumi\pulumi.exe"
+$pulumiExe = "C:\Pulumi\pulumi\bin\pulumi.exe"
 if (Test-Path $pulumiExe) {
-    AddToPath "C:\Pulumi\pulumi"
+    AddToPath "C:\Pulumi\pulumi\bin"
 } else {
     Write-Output "Erro: Pulumi não encontrado no diretório esperado."
 }
@@ -108,8 +108,6 @@ Write-Output "Instalações e configurações concluídas."
 # Verificação final
 $env:Path = [System.Environment]::GetEnvironmentVariable("Path", [System.EnvironmentVariableTarget]::Machine)
 Write-Output "Path atualizado: $env:Path"
-
-
 
 
 #Executando o Script
