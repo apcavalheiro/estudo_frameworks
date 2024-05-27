@@ -1,4 +1,4 @@
-## Tutorial: Implementação de uma Aplicação de Gestão de Tarefas usando Pulumi
+### Tutorial: Implementação de uma Aplicação de Gestão de Tarefas usando Pulumi
 
 ### Pré-requisitos
 
@@ -23,7 +23,34 @@ Forneça suas credenciais da AWS, região padrão e formato de saída:
 - **Default region name**: A região AWS que deseja usar (ex: `us-east-1`).
 - **Default output format**: Formato de saída, pode ser `json`.
 
-### Passo 2: Instalar e Configurar o Pulumi
+### Passo 2: Obter e Configurar o Pulumi Access Token
+
+1. **Obter o Pulumi Access Token**:
+   - Acesse o site do Pulumi: [Pulumi](https://app.pulumi.com/)
+   - Faça login na sua conta.
+   - No canto superior direito, clique no seu nome de usuário e selecione **Access Tokens**.
+   - Clique em **Create Access Token**.
+   - Dê um nome ao token e clique em **Create**.
+   - Copie o token gerado.
+
+2. **Configurar o Pulumi Access Token no Ambiente**:
+
+   #### Em Linux, macOS ou Unix
+   ```sh
+   export PULUMI_ACCESS_TOKEN=<seu_token_de_acesso>
+   ```
+
+   #### Em Windows (Prompt de Comando)
+   ```sh
+   set PULUMI_ACCESS_TOKEN=<seu_token_de_acesso>
+   ```
+
+   #### Em Windows (PowerShell)
+   ```sh
+   $env:PULUMI_ACCESS_TOKEN = "<seu_token_de_acesso>"
+   ```
+
+### Passo 3: Verificar Instalação do Pulumi
 
 Verifique se o Pulumi está instalado corretamente executando:
 
@@ -31,22 +58,29 @@ Verifique se o Pulumi está instalado corretamente executando:
 pulumi version
 ```
 
-### Passo 3: Criar um Novo Projeto Pulumi
+### Passo 4: Criar um Novo Projeto Pulumi
 
 Crie um novo projeto Pulumi utilizando Python como a linguagem de programação:
 
-```sh
-pulumi new aws-python
-```
+1. Crie e entre em um novo diretório:
+   ```sh
+   mkdir projeto_pulumi
+   cd projeto_pulumi
+   ```
+
+2. Execute o comando para criar o projeto:
+   ```sh
+   pulumi new aws-python --yes
+   ```
 
 Siga as instruções para configurar o projeto:
 
-- Nome do Projeto: `todo-app`
+- Nome do Projeto: `todo-app-pulumi`
 - Descrição: `Application to manage tasks using Pulumi`
 - Stack name: `dev`
 - AWS Region: `us-east-1`
 
-### Passo 4: Estrutura do Projeto
+### Passo 5: Estrutura do Projeto
 
 A estrutura do projeto será semelhante a esta:
 
@@ -60,7 +94,7 @@ todo-app
 └── __pycache__
 ```
 
-### Passo 5: Definir a Infraestrutura no Pulumi
+### Passo 6: Definir a Infraestrutura no Pulumi
 
 Abra o arquivo `__main__.py` e configure os recursos necessários:
 
@@ -218,7 +252,7 @@ deployment = aws.apigateway.Deployment('apiDeployment',
 pulumi.export('url', deployment.invoke_url.apply(lambda url: f"{url}todos"))
 ```
 
-### Passo 6: Implementar as Funções Lambda
+### Passo 7: Implementar as Funções Lambda
 
 Crie um diretório `app` e dentro dele adicione o arquivo `handler.py` com o código das funções Lambda:
 
@@ -268,6 +302,8 @@ def update_todo(event, context):
     update_expression = "SET "
     expression_attribute_values = {}
     if 'title' in data:
+
+
         update_expression += "title = :title, "
         expression_attribute_values[':title'] = data['title']
     if 'description' in data:
@@ -297,7 +333,7 @@ def delete_todo(event, context):
     }
 ```
 
-### Passo 7: Instalar Dependências
+### Passo 8: Instalar Dependências
 
 Crie um arquivo `requirements.txt` para listar as dependências do projeto:
 
@@ -308,12 +344,10 @@ boto3
 Instale as dependências executando:
 
 ```sh
-pip install -r requirements.txt
-
- -t ./app
+pip install -r requirements.txt -t ./app
 ```
 
-### Passo 8: Implantar a Aplicação
+### Passo 9: Implantar a Aplicação
 
 Execute os comandos a seguir para inicializar e implantar a aplicação no Pulumi:
 
@@ -325,7 +359,7 @@ pulumi up
 
 Confirme a implantação digitando `yes` quando solicitado.
 
-### Passo 9: Testar a Aplicação
+### Passo 10: Testar a Aplicação
 
 Após a implantação, você receberá o endpoint da API. Utilize ferramentas como Postman ou CURL para testar os endpoints `GET`, `POST`, `PUT` e `DELETE` da aplicação.
 
