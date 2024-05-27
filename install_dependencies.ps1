@@ -8,6 +8,20 @@ function CommandExists {
     $null -ne (Get-Command $command -ErrorAction SilentlyContinue)
 }
 
+# Função para adicionar uma variável de ambiente ao PATH
+function AddToPath {
+    param (
+        [string]$path
+    )
+    if (-not ($env:Path -like "*$path*")) {
+        [System.Environment]::SetEnvironmentVariable("Path", $env:Path + ";$path", [System.EnvironmentVariableTarget]::Machine)
+        $env:Path += ";$path"
+        Write-Output "$path adicionado ao Path."
+    } else {
+        Write-Output "$path já está no Path."
+    }
+}
+
 # Instalação do AWS CLI
 if (-not (CommandExists "aws")) {
     Write-Output "Instalando AWS CLI..."
@@ -31,29 +45,25 @@ if (-not (CommandExists "node")) {
 }
 
 # Adicionando Node.js ao Path
-$nodePath = "C:\Program Files\nodejs"
-if (-not ($env:Path -like "*$nodePath*")) {
-    [System.Environment]::SetEnvironmentVariable("Path", $env:Path + ";$nodePath", [System.EnvironmentVariableTarget]::Machine)
-    Write-Output "Node.js adicionado ao Path."
-}
+AddToPath "C:\Program Files\nodejs"
 
 # Instalação do Pulumi
 if (-not (CommandExists "pulumi")) {
     Write-Output "Instalando Pulumi..."
     Invoke-WebRequest -Uri "https://get.pulumi.com/releases/sdk/pulumi-v3.74.0-windows-x64.zip" -OutFile "pulumi.zip"
     Expand-Archive -Path "pulumi.zip" -DestinationPath "C:\Pulumi" -Force
-    $pulumiPath = "C:\Pulumi\pulumi"
-    [System.Environment]::SetEnvironmentVariable("Path", $env:Path + ";C:\Pulumi", [System.EnvironmentVariableTarget]::Machine)
     Remove-Item -Path "pulumi.zip"
     Write-Output "Pulumi instalado."
 } else {
     Write-Output "Pulumi já está instalado."
 }
 
-# Adicionando Pulumi ao Path
-if (-not ($env:Path -like "*$pulumiPath*")) {
-    [System.Environment]::SetEnvironmentVariable("Path", $env:Path + ";$pulumiPath", [System.EnvironmentVariableTarget]::Machine)
-    Write-Output "Pulumi adicionado ao Path."
+# Verificação do diretório de instalação do Pulumi
+$pulumiExe = "C:\Pulumi\pulumi\pulumi.exe"
+if (Test-Path $pulumiExe) {
+    AddToPath "C:\Pulumi\pulumi"
+} else {
+    Write-Output "Erro: Pulumi não encontrado no diretório esperado."
 }
 
 # Instalação do Python
@@ -68,11 +78,7 @@ if (-not (CommandExists "python")) {
 }
 
 # Adicionando Python ao Path
-$pythonPath = "C:\Program Files\Python310"
-if (-not ($env:Path -like "*$pythonPath*")) {
-    [System.Environment]::SetEnvironmentVariable("Path", $env:Path + ";$pythonPath", [System.EnvironmentVariableTarget]::Machine)
-    Write-Output "Python adicionado ao Path."
-}
+AddToPath "C:\Program Files\Python310"
 
 # Instalação do AWS SAM CLI
 if (-not (CommandExists "sam")) {
@@ -86,11 +92,7 @@ if (-not (CommandExists "sam")) {
 }
 
 # Adicionando AWS SAM CLI ao Path
-$samPath = "C:\Program Files\Amazon\AWSSAMCLI\bin"
-if (-not ($env:Path -like "*$samPath*")) {
-    [System.Environment]::SetEnvironmentVariable("Path", $env:Path + ";$samPath", [System.EnvironmentVariableTarget]::Machine)
-    Write-Output "AWS SAM CLI adicionado ao Path."
-}
+AddToPath "C:\Program Files\Amazon\AWSSAMCLI\bin"
 
 # Instalação do Serverless Framework
 if (-not (CommandExists "serverless")) {
@@ -102,6 +104,10 @@ if (-not (CommandExists "serverless")) {
 }
 
 Write-Output "Instalações e configurações concluídas."
+
+# Verificação final
+$env:Path = [System.Environment]::GetEnvironmentVariable("Path", [System.EnvironmentVariableTarget]::Machine)
+Write-Output "Path atualizado: $env:Path"
 
 
 
