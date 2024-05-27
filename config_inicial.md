@@ -1,4 +1,7 @@
 ### 1. Configurações e Instalações Necessárias
+- Todas as instalações estão disponíveis para instalação via script para windows 11
+- .\install_dependencies.ps1
+
 
 #### 1.1. Instalar AWS CLI
 
@@ -116,4 +119,3 @@ Para garantir que as ferramentas funcionem corretamente, você pode precisar con
    - Execute `pulumi new aws-python`.
    - Siga as instruções para configurar o novo projeto.
 
-Seguindo essas etapas, você terá todas as ferramentas e configurações necessárias para implementar e testar os códigos dos três frameworks serverless no Windows 11. Se precisar de mais detalhes ou assistência adicional, sinta-se à vontade para perguntar.

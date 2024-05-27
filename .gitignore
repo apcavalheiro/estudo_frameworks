@@ -1,0 +1,16 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Virtual environment
+venv/
+
+# AWS SAM build artifacts
+.build/
+
+# Serverless Framework build artifacts
+.serverless/
+
+# Pulumi state files
+Pulumi.*.yaml
